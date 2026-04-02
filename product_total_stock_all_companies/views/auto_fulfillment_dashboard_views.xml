@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_auto_fulfillment_dashboard" model="ir.actions.client">
+        <field name="name">Auto Fulfillment Dashboard</field>
+        <field name="tag">auto_fulfillment_dashboard_tag</field>
+    </record>
+
+    <menuitem id="menu_auto_fulfillment_root"
+              name="Auto Fulfillment"
+              parent="stock.menu_stock_root"
+              sequence="95"/>
+
+    <menuitem id="menu_auto_fulfillment_dashboard"
+              name="Dashboard"
+              parent="menu_auto_fulfillment_root"
+              action="action_auto_fulfillment_dashboard"
+              sequence="1"/>
+
+</odoo>

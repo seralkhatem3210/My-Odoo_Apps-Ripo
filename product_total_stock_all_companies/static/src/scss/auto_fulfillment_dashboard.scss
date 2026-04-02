@@ -1,0 +1,63 @@
+.o_auto_fulfillment_dashboard {
+    background: #f8fafc;
+    padding: 1rem 1rem 3rem 1rem;
+
+    .o_afd_header .card-body {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+        border-radius: 1rem;
+    }
+
+    .o_afd_kpi {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-left: 4px solid #875a7b;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.10) !important;
+        }
+    }
+
+    .card {
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        background: #fff;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .o_afd_log_row {
+        cursor: pointer;
+    }
+
+    .o_afd_log_row:hover {
+        background: #f8fbff;
+    }
+
+    // canvas {
+    //     width: 100% !important;
+    // }
+    
+    .o_afd_chart_box {
+        position: relative;
+        height: 320px;
+        min-height: 320px;
+    }
+
+    .o_afd_chart_box canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .o_afd_bottom_space {
+        height: 48px;
+    }
+}
+
+.o_action_manager,
+.o_action_manager .o_content,
+.o_web_client .o_action {
+    overflow-y: auto !important;
+}

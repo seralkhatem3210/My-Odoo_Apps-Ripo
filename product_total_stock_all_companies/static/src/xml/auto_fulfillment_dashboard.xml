@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="product_total_stock_all_companies.AutoFulfillmentDashboard">
+        <div class="o_auto_fulfillment_dashboard p-4">
+
+            <div class="o_afd_header card border-0 shadow-sm mb-4">
+                <div class="card-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                    <div>
+                        <h2 class="mb-1">Auto Fulfillment Dashboard</h2>
+                        <div class="text-muted">
+                            Monitor automated internal and intercompany stock fulfillment
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-outline-primary" t-on-click="openLogs">
+                            Open Logs
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6 col-xl-2">
+                            <label class="form-label">Date From</label>
+                            <input type="date" class="form-control" name="date_from"
+                                   t-att-value="state.filters.date_from"
+                                   t-on-change="onFilterChange"/>
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-2">
+                            <label class="form-label">Date To</label>
+                            <input type="date" class="form-control" name="date_to"
+                                   t-att-value="state.filters.date_to"
+                                   t-on-change="onFilterChange"/>
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-3">
+                            <label class="form-label">Company</label>
+                            <select class="form-select" name="company_id" t-on-change="onFilterChange">
+                                <t t-foreach="state.options.companies" t-as="company" t-key="company.id || 'all'">
+                                    <option t-att-value="company.id"
+                                            t-att-selected="state.filters.company_id == company.id">
+                                        <t t-esc="company.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-2">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="fulfillment_type" t-on-change="onFilterChange">
+                                <t t-foreach="state.options.types" t-as="item" t-key="item.value || 'all_type'">
+                                    <option t-att-value="item.value"
+                                            t-att-selected="state.filters.fulfillment_type === item.value">
+                                        <t t-esc="item.label"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-2">
+                            <label class="form-label">State</label>
+                            <select class="form-select" name="state" t-on-change="onFilterChange">
+                                <t t-foreach="state.options.states" t-as="item" t-key="item.value || 'all_state'">
+                                    <option t-att-value="item.value"
+                                            t-att-selected="state.filters.state === item.value">
+                                        <t t-esc="item.label"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="col-12 col-xl-1 d-flex align-items-end">
+                            <div class="d-flex gap-2 w-100">
+                                <button class="btn btn-primary w-100" t-on-click="applyFilters">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button class="btn btn-light border" t-on-click="resetFilters">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="state.loading">
+                <div class="alert alert-info">Loading dashboard...</div>
+            </t>
+
+            <t t-else="">
+                <div class="row g-3 mb-4">
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0 o_afd_kpi" t-on-click="() => this.openKpi('all')">
+                            <div class="card-body">
+                                <div class="text-muted small">Total Fulfillments</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_fulfillments || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0 o_afd_kpi" t-on-click="() => this.openKpi('internal')">
+                            <div class="card-body">
+                                <div class="text-muted small">Internal</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_internal || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0 o_afd_kpi" t-on-click="() => this.openKpi('intercompany')">
+                            <div class="card-body">
+                                <div class="text-muted small">Intercompany</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_intercompany || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0 o_afd_kpi" t-on-click="() => this.openKpi('failed')">
+                            <div class="card-body">
+                                <div class="text-muted small">Failed</div>
+                                <div class="fs-3 fw-bold text-danger"><t t-esc="state.data.kpis.total_failed || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="text-muted small">Total Quantity</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_quantity || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="text-muted small">Products</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_products || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="text-muted small">Done</div>
+                                <div class="fs-3 fw-bold text-success"><t t-esc="state.data.kpis.total_done || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="text-muted small">Companies</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_companies || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-xl-2">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="text-muted small">Avg Qty</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.avg_quantity || 0"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header fw-bold">Top Source Warehouses</div>
+                            <div class="card-body">
+                                <div class="o_afd_chart_box">
+                                    <canvas t-ref="chartWarehouse"/>
+                                </div>
+                            </div>
+
+                            <!-- <div class="card-body" style="height:320px;">
+                                <canvas t-ref="chartWarehouse"/>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header fw-bold">Top Products</div>
+                            <div class="card-body" style="height:320px;">
+                                <canvas t-ref="chartProduct"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-xl-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header fw-bold">Top Destination Companies</div>
+                            <div class="card-body" style="height:320px;">
+                                <canvas t-ref="chartDestinationCompany"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-xl-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header fw-bold">Fulfillment Type Split</div>
+                            <div class="card-body" style="height:320px;">
+                                <canvas t-ref="chartTypePie"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-xl-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header fw-bold">State Split</div>
+                            <div class="card-body" style="height:320px;">
+                                <canvas t-ref="chartStateDonut"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header fw-bold">Daily Fulfillment Trend</div>
+                            <div class="card-body" style="height:320px;">
+                                <canvas t-ref="chartTrend"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-header fw-bold">Recent Auto Fulfillment Logs</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Picking</th>
+                                        <th>Product</th>
+                                        <th>Type</th>
+                                        <th>Qty</th>
+                                        <th>Source Warehouse</th>
+                                        <th>Source Company</th>
+                                        <th>Destination Company</th>
+                                        <th>State</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="state.data.recent_logs" t-as="log" t-key="log.id"
+                                        class="o_afd_log_row"
+                                        t-on-click="() => this.openLog(log.id)">
+                                        <td><t t-esc="log.date"/></td>
+                                        <td><t t-esc="log.picking"/></td>
+                                        <td><t t-esc="log.product"/></td>
+                                        <td><t t-esc="log.type"/></td>
+                                        <td><t t-esc="log.qty"/></td>
+                                        <td><t t-esc="log.source_warehouse"/></td>
+                                        <td><t t-esc="log.source_company"/></td>
+                                        <td><t t-esc="log.destination_company"/></td>
+                                        <td>
+                                            <span t-att-class="log.state === 'failed' ? 'badge bg-danger' : 'badge bg-success'">
+                                                <t t-esc="log.state"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="!state.data.recent_logs.length">
+                                        <td colspan="9" class="text-center text-muted py-4">No logs found for selected filters.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </t>
+        </div>
+    </t>
+
+</templates>
+<!-- 
+<templates xml:space="preserve">
+
+    <t t-name="product_total_stock_all_companies.AutoFulfillmentDashboard">
+        <div class="o_auto_fulfillment_dashboard p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="mb-1">Auto Fulfillment Dashboard</h2>
+                    <div class="text-muted">Monitor automated internal and intercompany stock fulfillment</div>
+                </div>
+                <button class="btn btn-primary" t-on-click="openLogs">
+                    Open Logs
+                </button>
+            </div>
+
+            <t t-if="state.loading">
+                <div class="alert alert-info">Loading dashboard...</div>
+            </t>
+
+            <t t-else="">
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4 col-xl-2">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">Total Fulfillments</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_fulfillments"/></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-xl-2">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">Internal</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_internal"/></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-xl-2">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">Intercompany</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_intercompany"/></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-xl-2">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">Failed</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_failed"/></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-xl-2">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">Total Quantity</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_quantity"/></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-xl-2">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">Products</div>
+                                <div class="fs-3 fw-bold"><t t-esc="state.data.kpis.total_products"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow-sm">
+                            <div class="card-header fw-bold">Top Source Warehouses</div>
+                            <div class="card-body" style="height: 320px;">
+                                <canvas t-ref="chartWarehouse"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow-sm">
+                            <div class="card-header fw-bold">Top Products</div>
+                            <div class="card-body" style="height: 320px;">
+                                <canvas t-ref="chartProduct"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header fw-bold">Daily Fulfillment Trend</div>
+                            <div class="card-body" style="height: 320px;">
+                                <canvas t-ref="chartTrend"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header fw-bold">Recent Auto Fulfillment Logs</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Picking</th>
+                                        <th>Product</th>
+                                        <th>Type</th>
+                                        <th>Qty</th>
+                                        <th>Source Warehouse</th>
+                                        <th>Source Company</th>
+                                        <th>Destination Company</th>
+                                        <th>State</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="state.data.recent_logs" t-as="log" t-key="log.id">
+                                        <td><t t-esc="log.date"/></td>
+                                        <td><t t-esc="log.picking"/></td>
+                                        <td><t t-esc="log.product"/></td>
+                                        <td><t t-esc="log.type"/></td>
+                                        <td><t t-esc="log.qty"/></td>
+                                        <td><t t-esc="log.source_warehouse"/></td>
+                                        <td><t t-esc="log.source_company"/></td>
+                                        <td><t t-esc="log.destination_company"/></td>
+                                        <td><t t-esc="log.state"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    
+
+</templates> -->

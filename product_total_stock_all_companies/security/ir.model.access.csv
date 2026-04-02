@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_auto_fulfillment_log_user,auto.fulfillment.log.user,model_auto_fulfillment_log,stock.group_stock_user,1,1,1,0
+access_auto_fulfillment_log_public,auto.fulfillment.log.user.public,model_auto_fulfillment_log,,1,1,1,0
+access_auto_fulfillment_dashboard_user,auto.fulfillment.dashboard.user,model_auto_fulfillment_dashboard,stock.group_stock_user,1,0,0,0

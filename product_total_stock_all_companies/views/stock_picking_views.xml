@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_picking_form_auto_fulfillment" model="ir.ui.view">
+        <field name="name">stock.picking.form.auto.fulfillment</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[contains(@class,'oe_button_box')]" position="inside">
+                <button name="action_view_auto_fulfillment_logs"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-random">
+                    <field name="auto_fulfillment_log_count" widget="statinfo" string="Auto Fulfillment"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
