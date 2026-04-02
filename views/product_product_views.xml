@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- Product Variant Form View -->
+    <!-- Base View: product.product_normal_form_view -->
+    <!-- ===================================================== -->
+    <record id="view_product_product_form_all_companies_stock" model="ir.ui.view">
+        <field name="name">product.product.form.all.companies.stock</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Add a clean stock group inside form -->
+            <xpath expr="//sheet//group" position="inside">
+                <group string="All Companies Stock">
+                    <field name="qty_all_companies" readonly="1"/>
+                    <field name="free_qty_all_companies" readonly="1"/>
+                    <field name="company_stock_summary" readonly="1" widget="text"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- Product Variant List View -->
+    <!-- Base View: product.product_product_tree_view -->
+    <!-- ===================================================== -->
+    <record id="view_product_product_tree_all_companies_stock" model="ir.ui.view">
+        <field name="name">product.product.tree.all.companies.stock</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Add after current company qty_available -->
+            <xpath expr="//field[@name='qty_available']" position="after">
+                <field name="qty_all_companies" string="All Companies On Hand" optional="show" readonly="1"/>
+                <field name="free_qty_all_companies" string="All Companies Free Qty" optional="show" readonly="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- Product Variant Kanban View -->
+    <!-- Base View: product.product_view_kanban_catalog -->
+    <!-- ===================================================== -->
+    <!-- <record id="view_product_product_kanban_all_companies_stock" model="ir.ui.view">
+        <field name="name">product.product.kanban.all.companies.stock</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//kanban" position="inside">
+                <field name="qty_all_companies"/>
+                <field name="free_qty_all_companies"/>
+            </xpath>
+
+            <xpath expr="//t[@t-name='card']//div[contains(@class, 'o_kanban_record_bottom')]" position="before">
+                <div class="mt-2 mb-1">
+                    <div class="text-muted small">
+                        <strong>All Companies</strong>
+                    </div>
+                    <div class="small">
+                        <span>On Hand: </span>
+                        <field name="qty_all_companies"/>
+                    </div>
+                    <div class="small">
+                        <span>Free Qty: </span>
+                        <field name="free_qty_all_companies"/>
+                    </div>
+                </div>
+            </xpath>
+
+        </field>
+    </record> -->
+
+    <record id="view_product_product_kanban_all_companies_stock" model="ir.ui.view">
+        <field name="name">product.product.kanban.all.companies.stock</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//kanban" position="inside">
+                <field name="qty_all_companies"/>
+                <field name="free_qty_all_companies"/>
+            </xpath>
+
+            <xpath expr="//t[@t-name='card']//div[contains(@class, 'p-2') and contains(@class, 'd-flex') and contains(@class, 'flex-column')]" position="inside">
+                <div class="mt-2 pt-2 border-top">
+                    <div class="d-flex justify-content-between align-items-center small">
+                        <span class="text-muted">All Companies On Hand</span>
+                        <span class="fw-bold">
+                            <field name="qty_all_companies"/>
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center small mt-1">
+                        <span class="text-muted">All Companies Free</span>
+                        <span class="fw-bold">
+                            <field name="free_qty_all_companies"/>
+                        </span>
+                    </div>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+
+
+    <record id="view_product_template_kanban_all_companies_stock" model="ir.ui.view">
+        <field name="name">product.template.kanban.all.companies.stock</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+
+            <!-- load field in kanban -->
+            <xpath expr="//kanban" position="inside">
+                <field name="qty_all_companies"/>
+                <field name="free_qty_all_companies"/>
+            </xpath>
+
+            <!-- add display under price -->
+            <xpath expr="//t[@t-name='card']//span[.//field[@name='list_price']]" position="after">
+                <div class="text-muted mt-1">
+                    <span>All Companies Qty On Hand: </span>
+                    <strong><field name="qty_all_companies"/></strong>
+                </div>
+                <div class="text-muted">
+                    <span>All Companies Free Qty: </span>
+                    <strong><field name="free_qty_all_companies"/></strong>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- <record id="view_product_template_kanban_all_companies_stock" model="ir.ui.view">
+        <field name="name">product.template.kanban.all.companies.stock</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//kanban" position="inside">
+                <field name="qty_all_companies"/>
+                <field name="free_qty_all_companies"/>
+            </xpath>
+
+            <xpath expr="//t[@t-name='card']//field[@name='product_properties']" position="before">
+                <div class="mt-1 text-muted">
+                    <span>All Companies On Hand: </span>
+                    <strong><field name="qty_all_companies"/></strong>
+                </div>
+                <div class="text-muted">
+                    <span>All Companies Free Qty: </span>
+                    <strong><field name="free_qty_all_companies"/></strong>
+                </div>
+            </xpath>
+
+        </field>
+    </record> -->
+
+
+
+    <record id="view_product_template_form_auto_fulfillment" model="ir.ui.view">
+        <field name="name">product.template.form.auto.fulfillment</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='inventory']" position="inside">
+                <group string="Cross-Company Fulfillment">
+                    <field name="allow_auto_cross_company_fulfillment"/>
+                    <field name="qty_all_companies" readonly="1"/>
+                    <field name="free_qty_all_companies" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- <xpath expr="//t[@t-name='card']//div[hasclass('p-2')]" position="inside">
+        <div class="mt-2 pt-2 border-top">
+            <div class="d-flex justify-content-between small">
+                <span class="text-muted">All Companies On Hand</span>
+                <strong><field name="qty_all_companies"/></strong>
+            </div>
+            <div class="d-flex justify-content-between small mt-1">
+                <span class="text-muted">All Companies Free</span>
+                <strong><field name="free_qty_all_companies"/></strong>
+            </div>
+        </div>
+    </xpath> -->
+
+
+</odoo>
