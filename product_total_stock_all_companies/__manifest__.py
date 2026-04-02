@@ -1,6 +1,6 @@
 {
     "name": "Product Total Stock All Companies",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "summary": "Show total stock across all companies and auto fulfill shortages",
     "category": "Inventory/Inventory",
     "author": "Sirelkhatim",
