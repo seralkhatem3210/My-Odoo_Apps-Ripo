@@ -5,7 +5,7 @@
     "description": "Automatically resolve stock shortages using internal and intercompany transfers with full automation.",
     "category": "Inventory/Inventory",
     "author": "Sirelkhatim",
-    "website": "https://yourcompany.com",
+    "website": "https://sirelkhatim.odoo.com",
     "license": "LGPL-3",
     "price": 152.0,
     "depends": [
