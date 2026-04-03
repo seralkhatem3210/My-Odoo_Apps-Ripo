@@ -32,9 +32,9 @@
             'product_total_stock_all_companies/static/src/scss/auto_fulfillment_dashboard.scss',
         ],
     },
-
     "images": [
-        "static/description/*.*",
+        "static/description/banner.png",
+        "static/description/icon.png"
     ],
     "installable": True,
     "application": True,
