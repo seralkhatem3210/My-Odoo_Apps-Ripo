@@ -7,7 +7,7 @@
     "author": "Sirelkhatim",
     "website": "https://yourcompany.com",
     "license": "LGPL-3",
-    "price": 152.0,
+    # "price": 152.0,
     "depends": [
         "stock",
         "product",
@@ -24,12 +24,6 @@
         "security/ir.model.access.csv",       
     ],
 
-    # "assets": {
-    #     "web.assets_backend": [
-    #         "product_total_stock_all_companies/static/src/js/auto_fulfillment_dashboard.js",
-    #         "product_total_stock_all_companies/static/src/xml/auto_fulfillment_dashboard.xml",
-    #     ],
-    # },
 
     'assets': {
         'web.assets_backend': [
@@ -40,7 +34,7 @@
     },
 
     "images": [
-        "static/description/*.png",
+        "static/description/*.*",
     ],
     "installable": True,
     "application": True,
