@@ -7,6 +7,7 @@
     "author": "Sirelkhatim",
     "website": "https://yourcompany.com",
     "license": "LGPL-3",
+    "price": 152.0,
     "depends": [
         "stock",
         "product",
@@ -39,7 +40,7 @@
     },
 
     "images": [
-        "static/description/banner.png",
+        "static/description/*.png",
     ],
     "installable": True,
     "application": True,
