@@ -7,7 +7,7 @@
     "author": "Sirelkhatim",
     "website": "https://yourcompany.com",
     "license": "LGPL-3",
-    # "price": 152.0,
+    "price": 152.0,
     "depends": [
         "stock",
         "product",
